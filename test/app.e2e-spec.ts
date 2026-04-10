@@ -24,7 +24,7 @@ describe('NexusEats API (e2e)', () => {
       process.env.DATABASE_URL_TEST ||
       'postgresql://nexuseats:nexuseats_dev@localhost:5432/nexuseats_test';
 
-    execSync('npx prisma migrate deploy', {
+    execSync('npx prisma db push --skip-generate --accept-data-loss', {
       env: { ...process.env },
       stdio: 'inherit',
     });
