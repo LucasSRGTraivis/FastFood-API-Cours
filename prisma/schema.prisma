@@ -1,0 +1,105 @@
+// Schéma Prisma pour NexusEats
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum CuisineType {
+  ITALIEN
+  ASIATIQUE
+  BURGER
+  PIZZA
+  SUSHI
+  INDIEN
+  FRANCAIS
+  FAST_FOOD
+
+  @@map("cuisine_type")
+}
+
+model Restaurant {
+  id          String       @id @default(uuid())
+  name        String
+  cuisine     CuisineType
+  address     String
+  rating      Float        @default(0)
+  isOpen      Boolean      @default(true) @map("is_open")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  deletedAt   DateTime?    @map("deleted_at")
+  
+  // Relations
+  menus       Menu[]
+  owner       User         @relation(fields: [ownerId], references: [id])
+  ownerId     Int          @map("owner_id")
+
+  @@index([cuisine])
+  @@index([rating(sort: Desc)])
+  @@index([name])
+  @@map("restaurants")
+}
+
+model Menu {
+  id            String      @id @default(uuid())
+  name          String
+  description   String?
+  restaurantId  String      @map("restaurant_id")
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  
+  // Relations
+  restaurant    Restaurant  @relation(fields: [restaurantId], references: [id], onDelete: Cascade)
+  items         MenuItem[]
+
+  @@index([restaurantId])
+  @@map("menus")
+}
+
+model MenuItem {
+  id          String      @id @default(uuid())
+  name        String
+  price       Decimal     @db.Decimal(10, 2)
+  available   Boolean     @default(true)
+  menuId      String      @map("menu_id")
+  createdAt   DateTime    @default(now()) @map("created_at")
+  updatedAt   DateTime    @updatedAt @map("updated_at")
+  
+  // Relations
+  menu        Menu        @relation(fields: [menuId], references: [id], onDelete: Cascade)
+  categories  Category[]
+
+  @@index([menuId])
+  @@index([available])
+  @@index([price])
+  @@map("menu_items")
+}
+
+model Category {
+  id        String      @id @default(uuid())
+  name      String      @unique
+  createdAt DateTime    @default(now()) @map("created_at")
+  updatedAt DateTime    @updatedAt @map("updated_at")
+  
+  // Relation N:M avec MenuItem
+  items     MenuItem[]
+
+  @@map("categories")
+}
+
+
+model User {
+  id          Int          @id @default(autoincrement())
+  email       String       @unique
+  password    String
+  role        String       @default("customer")
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  
+  // Relations
+  restaurants Restaurant[]
+
+  @@map("users")
+}
