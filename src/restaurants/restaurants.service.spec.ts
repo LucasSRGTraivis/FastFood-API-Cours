@@ -75,7 +75,7 @@ describe('RestaurantsService', () => {
       expect(result.meta.total).toBe(1);
       expect(mockCacheManager.get).toHaveBeenCalled();
       expect(mockPrismaService.restaurant.findMany).toHaveBeenCalledWith({
-        where: { deletedAt: null },
+        where: {},
         skip: 0,
         take: 10,
         orderBy: { createdAt: 'desc' },
@@ -133,7 +133,6 @@ describe('RestaurantsService', () => {
 
       expect(mockPrismaService.restaurant.findMany).toHaveBeenCalledWith({
         where: {
-          deletedAt: null,
           cuisine: 'ITALIEN',
           rating: { gte: 4.0 },
           isOpen: true,
@@ -177,13 +176,13 @@ describe('RestaurantsService', () => {
         menus: [{ id: 'm1', name: 'Menu du jour', items: [] }],
       };
 
-      mockPrismaService.restaurant.findUnique.mockResolvedValue(mockRestaurant);
+      mockPrismaService.restaurant.findFirst.mockResolvedValue(mockRestaurant);
 
       const result = await service.findOne('1');
 
       expect(result).toEqual(mockRestaurant);
-      expect(mockPrismaService.restaurant.findUnique).toHaveBeenCalledWith({
-        where: { id: '1', deletedAt: null },
+      expect(mockPrismaService.restaurant.findFirst).toHaveBeenCalledWith({
+        where: { id: '1' },
         include: {
           menus: {
             include: {
@@ -199,7 +198,7 @@ describe('RestaurantsService', () => {
     });
 
     it("devrait lever NotFoundException si le restaurant n'existe pas", async () => {
-      mockPrismaService.restaurant.findUnique.mockResolvedValue(null);
+      mockPrismaService.restaurant.findFirst.mockResolvedValue(null);
 
       await expect(service.findOne('999')).rejects.toThrow(NotFoundException);
       await expect(service.findOne('999')).rejects.toThrow(
@@ -245,7 +244,6 @@ describe('RestaurantsService', () => {
       expect(mockPrismaService.restaurant.findFirst).toHaveBeenCalledWith({
         where: {
           name: { equals: mockDto.name, mode: 'insensitive' },
-          deletedAt: null,
         },
       });
       expect(mockPrismaService.restaurant.create).toHaveBeenCalledWith({
@@ -307,7 +305,7 @@ describe('RestaurantsService', () => {
         cuisine: mockUpdateDto.cuisine,
       };
 
-      mockPrismaService.restaurant.findUnique.mockResolvedValue(
+      mockPrismaService.restaurant.findFirst.mockResolvedValue(
         mockExistingRestaurant,
       );
       mockPrismaService.restaurant.update.mockResolvedValue(
@@ -326,7 +324,7 @@ describe('RestaurantsService', () => {
     });
 
     it("devrait lever NotFoundException si le restaurant n'existe pas", async () => {
-      mockPrismaService.restaurant.findUnique.mockResolvedValue(null);
+      mockPrismaService.restaurant.findFirst.mockResolvedValue(null);
 
       await expect(service.update('999', mockUpdateDto)).rejects.toThrow(
         NotFoundException,
@@ -342,7 +340,7 @@ describe('RestaurantsService', () => {
         name: 'Restaurant à supprimer',
       };
 
-      mockPrismaService.restaurant.findUnique.mockResolvedValue(mockRestaurant);
+      mockPrismaService.restaurant.findFirst.mockResolvedValue(mockRestaurant);
       mockPrismaService.restaurant.update.mockResolvedValue({
         ...mockRestaurant,
         deletedAt: new Date(),
@@ -359,7 +357,7 @@ describe('RestaurantsService', () => {
     });
 
     it("devrait lever NotFoundException si le restaurant n'existe pas", async () => {
-      mockPrismaService.restaurant.findUnique.mockResolvedValue(null);
+      mockPrismaService.restaurant.findFirst.mockResolvedValue(null);
 
       await expect(service.remove('999')).rejects.toThrow(NotFoundException);
       expect(mockPrismaService.restaurant.update).not.toHaveBeenCalled();
@@ -396,7 +394,6 @@ describe('RestaurantsService', () => {
         where: {
           name: { equals: mockSimpleDto.name, mode: 'insensitive' },
           address: { equals: mockSimpleDto.address, mode: 'insensitive' },
-          deletedAt: null,
         },
       });
     });
