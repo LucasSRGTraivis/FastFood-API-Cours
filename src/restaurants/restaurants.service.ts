@@ -27,7 +27,7 @@ export interface PaginatedResponse<T> {
   meta: PaginationMetadata;
 }
 
-interface FindAllFilters {
+export interface FindAllFilters {
   cuisine?: string;
   minRating?: number;
   isOpen?: boolean;
@@ -47,9 +47,10 @@ export class RestaurantsService {
     fields?: string[],
   ): Promise<PaginatedResponse<any>> {
     const cacheKey = `restaurants:${page}:${limit}:${JSON.stringify(filters)}:${fields?.join(',')}`;
-    
+
     // Vérifier le cache
-    const cached = await this.cacheManager.get<PaginatedResponse<any>>(cacheKey);
+    const cached =
+      await this.cacheManager.get<PaginatedResponse<any>>(cacheKey);
     if (cached) {
       return cached;
     }
@@ -84,7 +85,9 @@ export class RestaurantsService {
     if (fields !== undefined) {
       const requested = fields.map((f) => f.trim()).filter(Boolean);
       if (requested.length === 0) {
-        throw new BadRequestException('Le paramètre "fields" ne peut pas être vide.');
+        throw new BadRequestException(
+          'Le paramètre "fields" ne peut pas être vide.',
+        );
       }
 
       const invalid = requested.filter((f) => !allowedFields.includes(f));

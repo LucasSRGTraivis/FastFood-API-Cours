@@ -24,7 +24,9 @@ type Order = {
 export class OrdersHandlers {
   private orders: Order[] = [];
 
-  constructor(@Inject('EVENTS_CLIENT') private readonly eventsClient: ClientProxy) {}
+  constructor(
+    @Inject('EVENTS_CLIENT') private readonly eventsClient: ClientProxy,
+  ) {}
 
   private createOrderImpl(dto: CreateOrderDto): Order {
     const order: Order = {
@@ -50,7 +52,7 @@ export class OrdersHandlers {
   }
 
   @MessagePattern('create_order')
-  async createOrderString(@Payload() dto: CreateOrderDto): Promise<Order> {
+  createOrderString(@Payload() dto: CreateOrderDto): Order {
     console.log('[orders-service] received create_order (string)', dto);
     const order = this.createOrderImpl(dto);
     console.log('[orders-service] created order', order.id);
@@ -58,7 +60,7 @@ export class OrdersHandlers {
   }
 
   @MessagePattern({ cmd: 'create_order' })
-  async createOrderObject(@Payload() dto: CreateOrderDto): Promise<Order> {
+  createOrderObject(@Payload() dto: CreateOrderDto): Order {
     console.log('[orders-service] received create_order (object)', dto);
     const order = this.createOrderImpl(dto);
     console.log('[orders-service] created order', order.id);
@@ -86,22 +88,14 @@ export class OrdersHandlers {
   }
 
   @MessagePattern('get_order_by_id')
-  async getOrderByIdString(
-    @Payload() data: { id: string },
-  ): Promise<Order> {
+  async getOrderByIdString(@Payload() data: { id: string }): Promise<Order> {
     console.log('[orders-service] received get_order_by_id (string)', data.id);
     return this.getOrderByIdImpl(data.id);
   }
 
   @MessagePattern({ cmd: 'get_order_by_id' })
-  async getOrderByIdObject(
-    @Payload() data: { id: string },
-  ): Promise<Order> {
-    console.log(
-      '[orders-service] received get_order_by_id (object)',
-      data.id,
-    );
+  async getOrderByIdObject(@Payload() data: { id: string }): Promise<Order> {
+    console.log('[orders-service] received get_order_by_id (object)', data.id);
     return this.getOrderByIdImpl(data.id);
   }
 }
-

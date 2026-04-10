@@ -9,12 +9,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { MenusService } from './menus.service';
 import { CreateMenuDto } from './dto/create-menu.dto';
 import { UpdateMenuDto } from './dto/update-menu.dto';
@@ -27,7 +22,7 @@ export class MenusController {
   @Post()
   @ApiOperation({
     summary: 'Créer un menu',
-    description: "Crée un menu rattaché à un restaurant existant.",
+    description: 'Crée un menu rattaché à un restaurant existant.',
   })
   @ApiParam({
     name: 'restaurantId',

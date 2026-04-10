@@ -22,10 +22,8 @@ async function bootstrap() {
   );
 
   await app.listen();
-  // eslint-disable-next-line no-console
-  console.log(
-    '[notifications-service] started on queue "notifications_queue"',
-  );
+
+  console.log('[notifications-service] started on queue "notifications_queue"');
 }
 
-bootstrap();
+void bootstrap();

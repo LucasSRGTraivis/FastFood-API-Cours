@@ -20,7 +20,8 @@ describe('NexusEats API (e2e)', () => {
   let restaurantId: string;
 
   beforeAll(async () => {
-    process.env.DATABASE_URL = process.env.DATABASE_URL_TEST || 
+    process.env.DATABASE_URL =
+      process.env.DATABASE_URL_TEST ||
       'postgresql://nexuseats:nexuseats_dev@localhost:5432/nexuseats_test';
 
     execSync('npx prisma migrate deploy', {
@@ -35,15 +36,20 @@ describe('NexusEats API (e2e)', () => {
     app = moduleFixture.createNestApplication();
     prisma = app.get(PrismaService);
 
-    app.useGlobalPipes(new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    }));
+    app.useGlobalPipes(
+      new ValidationPipe({
+        whitelist: true,
+        forbidNonWhitelisted: true,
+        transform: true,
+        transformOptions: { enableImplicitConversion: true },
+      }),
+    );
 
     app.useGlobalFilters(new GlobalExceptionFilter());
-    app.useGlobalInterceptors(new LoggingInterceptor(), new TransformInterceptor());
+    app.useGlobalInterceptors(
+      new LoggingInterceptor(),
+      new TransformInterceptor(),
+    );
     useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
     await app.init();

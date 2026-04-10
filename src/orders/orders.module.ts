@@ -11,7 +11,10 @@ const ORDERS_CLIENT = 'ORDERS_CLIENT';
         name: ORDERS_CLIENT,
         transport: Transport.RMQ,
         options: {
-          urls: [process.env.RABBITMQ_URL || 'amqp://nexuseats:secret@localhost:5672'],
+          urls: [
+            process.env.RABBITMQ_URL ||
+              'amqp://nexuseats:secret@localhost:5672',
+          ],
           queue: 'orders_queue',
           queueOptions: {
             durable: true,
@@ -23,4 +26,3 @@ const ORDERS_CLIENT = 'ORDERS_CLIENT';
   controllers: [OrdersController],
 })
 export class OrdersModule {}
-

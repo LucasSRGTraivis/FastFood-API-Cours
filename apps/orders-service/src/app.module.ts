@@ -10,7 +10,8 @@ import { OrdersHandlers } from './orders/orders.handlers';
         transport: Transport.RMQ,
         options: {
           urls: [
-            process.env.RABBITMQ_URL || 'amqp://nexuseats:secret@localhost:5672',
+            process.env.RABBITMQ_URL ||
+              'amqp://nexuseats:secret@localhost:5672',
           ],
           exchange: 'order_events',
           exchangeType: 'fanout',
@@ -22,4 +23,3 @@ import { OrdersHandlers } from './orders/orders.handlers';
   controllers: [OrdersHandlers],
 })
 export class AppModule {}
-

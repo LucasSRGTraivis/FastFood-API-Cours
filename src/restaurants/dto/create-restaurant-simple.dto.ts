@@ -9,9 +9,27 @@ export class CreateRestaurantSimpleDto {
 
   @ApiProperty({
     example: 'SUSHI',
-    enum: ['ITALIEN', 'ASIATIQUE', 'BURGER', 'PIZZA', 'SUSHI', 'INDIEN', 'FRANCAIS', 'FAST_FOOD'],
+    enum: [
+      'ITALIEN',
+      'ASIATIQUE',
+      'BURGER',
+      'PIZZA',
+      'SUSHI',
+      'INDIEN',
+      'FRANCAIS',
+      'FAST_FOOD',
+    ],
   })
-  @IsEnum(['ITALIEN', 'ASIATIQUE', 'BURGER', 'PIZZA', 'SUSHI', 'INDIEN', 'FRANCAIS', 'FAST_FOOD'])
+  @IsEnum([
+    'ITALIEN',
+    'ASIATIQUE',
+    'BURGER',
+    'PIZZA',
+    'SUSHI',
+    'INDIEN',
+    'FRANCAIS',
+    'FAST_FOOD',
+  ])
   @IsNotEmpty()
   cuisine: string;
 

@@ -35,20 +35,24 @@ export class OrdersController {
   @ApiResponse({ status: 400, description: 'Payload de commande invalide.' })
   @ApiResponse({ status: 401, description: 'Non authentifié.' })
   @ApiResponse({ status: 403, description: 'Accès interdit.' })
-  @ApiResponse({ status: 409, description: 'Conflit métier (commande déjà existante).' })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflit métier (commande déjà existante).',
+  })
   @ApiResponse({ status: 429, description: 'Limite de requêtes dépassée.' })
-  @ApiResponse({ status: 502, description: 'Erreur de communication avec Orders Service' })
+  @ApiResponse({
+    status: 502,
+    description: 'Erreur de communication avec Orders Service',
+  })
   @ApiResponse({ status: 504, description: 'Timeout Orders Service' })
   @HttpCode(HttpStatus.CREATED)
   async create(@Body() dto: CreateOrderDto) {
     try {
-      const obs$ = this.client
-        .send('create_order', dto)
-        .pipe(timeout(3000));
+      const obs$ = this.client.send('create_order', dto).pipe(timeout(3000));
       return await firstValueFrom(obs$);
     } catch (e: any) {
       // Pour debug TP (connexion / pas de consumer / erreur RMQ)
-      // eslint-disable-next-line no-console
+
       console.error('[gateway] create_order failed', {
         name: e?.name,
         message: e?.message,
@@ -99,4 +103,3 @@ export class OrdersController {
     return await firstValueFrom(obs$);
   }
 }
-

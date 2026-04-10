@@ -15,11 +15,13 @@ export class CreateOrderDto {
   @ApiProperty({
     description: 'Liste des lignes de commande',
     type: () => [CreateOrderItemDto],
-    example: [{ menuItemId: 145, qty: 2 }, { menuItemId: 211, qty: 1 }],
+    example: [
+      { menuItemId: 145, qty: 2 },
+      { menuItemId: 211, qty: 1 },
+    ],
   })
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateOrderItemDto)
   items: CreateOrderItemDto[];
 }
-

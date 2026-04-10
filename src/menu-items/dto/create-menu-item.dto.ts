@@ -1,5 +1,13 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsString, IsNumber, IsPositive, IsBoolean, IsUUID, IsOptional, IsArray } from 'class-validator';
+import {
+  IsString,
+  IsNumber,
+  IsPositive,
+  IsBoolean,
+  IsUUID,
+  IsOptional,
+  IsArray,
+} from 'class-validator';
 
 export class CreateMenuItemDto {
   @ApiProperty({

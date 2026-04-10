@@ -35,7 +35,7 @@ describe('RolesGuard', () => {
     } as any;
   };
 
-  it('devrait retourner true si aucun rôle n\'est requis (route publique)', () => {
+  it("devrait retourner true si aucun rôle n'est requis (route publique)", () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(undefined);
 
     const context = createMockExecutionContext();
@@ -44,19 +44,29 @@ describe('RolesGuard', () => {
     expect(result).toBe(true);
   });
 
-  it('devrait retourner true si l\'utilisateur a le rôle requis', () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['owner', 'admin']);
+  it("devrait retourner true si l'utilisateur a le rôle requis", () => {
+    jest
+      .spyOn(reflector, 'getAllAndOverride')
+      .mockReturnValue(['owner', 'admin']);
 
-    const context = createMockExecutionContext({ id: 1, email: 'owner@test.com', role: 'owner' });
+    const context = createMockExecutionContext({
+      id: 1,
+      email: 'owner@test.com',
+      role: 'owner',
+    });
     const result = guard.canActivate(context);
 
     expect(result).toBe(true);
   });
 
-  it('devrait lever ForbiddenException si l\'utilisateur n\'a pas le rôle requis', () => {
+  it("devrait lever ForbiddenException si l'utilisateur n'a pas le rôle requis", () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['admin']);
 
-    const context = createMockExecutionContext({ id: 1, email: 'owner@test.com', role: 'owner' });
+    const context = createMockExecutionContext({
+      id: 1,
+      email: 'owner@test.com',
+      role: 'owner',
+    });
 
     expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
     expect(() => guard.canActivate(context)).toThrow(
@@ -64,19 +74,27 @@ describe('RolesGuard', () => {
     );
   });
 
-  it('devrait lever ForbiddenException si l\'utilisateur n\'est pas authentifié', () => {
+  it("devrait lever ForbiddenException si l'utilisateur n'est pas authentifié", () => {
     jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['owner']);
 
     const context = createMockExecutionContext(undefined);
 
     expect(() => guard.canActivate(context)).toThrow(ForbiddenException);
-    expect(() => guard.canActivate(context)).toThrow('Utilisateur non authentifié');
+    expect(() => guard.canActivate(context)).toThrow(
+      'Utilisateur non authentifié',
+    );
   });
 
-  it('devrait retourner true si l\'utilisateur a l\'un des rôles requis', () => {
-    jest.spyOn(reflector, 'getAllAndOverride').mockReturnValue(['owner', 'admin']);
+  it("devrait retourner true si l'utilisateur a l'un des rôles requis", () => {
+    jest
+      .spyOn(reflector, 'getAllAndOverride')
+      .mockReturnValue(['owner', 'admin']);
 
-    const context = createMockExecutionContext({ id: 1, email: 'admin@test.com', role: 'admin' });
+    const context = createMockExecutionContext({
+      id: 1,
+      email: 'admin@test.com',
+      role: 'admin',
+    });
     const result = guard.canActivate(context);
 
     expect(result).toBe(true);

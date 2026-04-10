@@ -18,4 +18,3 @@ export class CreateOrderItemDto {
   @IsPositive()
   qty: number;
 }
-

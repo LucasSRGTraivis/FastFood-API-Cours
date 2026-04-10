@@ -10,9 +10,7 @@ import { PrismaService } from '../../prisma/prisma.service';
 
 @ValidatorConstraint({ async: true })
 @Injectable()
-export class IsUniqueRestaurantNameConstraint
-  implements ValidatorConstraintInterface
-{
+export class IsUniqueRestaurantNameConstraint implements ValidatorConstraintInterface {
   constructor(private readonly prisma: PrismaService) {}
 
   async validate(value: any): Promise<boolean> {
@@ -42,7 +40,7 @@ export class IsUniqueRestaurantNameConstraint
 export function IsUniqueRestaurantName(
   validationOptions?: ValidationOptions,
 ): PropertyDecorator {
-  return (object: Object, propertyName: string | symbol) => {
+  return (object: object, propertyName: string | symbol) => {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName as string,
@@ -52,4 +50,3 @@ export function IsUniqueRestaurantName(
     });
   };
 }
-

@@ -21,9 +21,8 @@ async function bootstrap() {
   );
 
   await app.listen();
-  // eslint-disable-next-line no-console
+
   console.log('[orders-service] RMQ consumer started on queue "orders_queue"');
 }
 
-bootstrap();
-
+void bootstrap();

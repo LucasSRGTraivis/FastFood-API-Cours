@@ -21,14 +21,14 @@ describe('RestaurantsService', () => {
     },
   };
 
-const mockCacheManager = {
-  get: jest.fn(),
-  set: jest.fn(),
-  del: jest.fn(),
-  store: {
-    reset: jest.fn(),
-  },
-};
+  const mockCacheManager = {
+    get: jest.fn(),
+    set: jest.fn(),
+    del: jest.fn(),
+    store: {
+      reset: jest.fn(),
+    },
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -100,7 +100,14 @@ const mockCacheManager = {
     it('devrait retourner depuis le cache (cache HIT)', async () => {
       const cachedData = {
         data: [{ id: '1', name: 'Cached Restaurant' }],
-        meta: { total: 1, page: 1, limit: 10, lastPage: 1, hasNext: false, hasPrev: false },
+        meta: {
+          total: 1,
+          page: 1,
+          limit: 10,
+          lastPage: 1,
+          hasNext: false,
+          hasPrev: false,
+        },
       };
 
       mockCacheManager.get.mockResolvedValue(cachedData); // Cache HIT
@@ -191,7 +198,7 @@ const mockCacheManager = {
       });
     });
 
-    it('devrait lever NotFoundException si le restaurant n\'existe pas', async () => {
+    it("devrait lever NotFoundException si le restaurant n'existe pas", async () => {
       mockPrismaService.restaurant.findUnique.mockResolvedValue(null);
 
       await expect(service.findOne('999')).rejects.toThrow(NotFoundException);
@@ -227,7 +234,9 @@ const mockCacheManager = {
       };
 
       mockPrismaService.restaurant.findFirst.mockResolvedValue(null);
-      mockPrismaService.restaurant.create.mockResolvedValue(mockCreatedRestaurant);
+      mockPrismaService.restaurant.create.mockResolvedValue(
+        mockCreatedRestaurant,
+      );
       mockCacheManager.store.reset.mockResolvedValue(undefined);
 
       const result = await service.create(mockDto, 1);
@@ -269,13 +278,15 @@ const mockCacheManager = {
 
     it('devrait propager les erreurs Prisma non gérées', async () => {
       mockPrismaService.restaurant.findFirst.mockResolvedValue(null);
-      
+
       const prismaError: any = new Error('Database error');
       prismaError.code = 'P2003';
-      
+
       mockPrismaService.restaurant.create.mockRejectedValue(prismaError);
 
-      await expect(service.create(mockDto, 1)).rejects.toThrow('Database error');
+      await expect(service.create(mockDto, 1)).rejects.toThrow(
+        'Database error',
+      );
     });
   });
 
@@ -314,7 +325,7 @@ const mockCacheManager = {
       expect(mockCacheManager.store.reset).toHaveBeenCalled();
     });
 
-    it('devrait lever NotFoundException si le restaurant n\'existe pas', async () => {
+    it("devrait lever NotFoundException si le restaurant n'existe pas", async () => {
       mockPrismaService.restaurant.findUnique.mockResolvedValue(null);
 
       await expect(service.update('999', mockUpdateDto)).rejects.toThrow(
@@ -347,7 +358,7 @@ const mockCacheManager = {
       expect(mockCacheManager.store.reset).toHaveBeenCalled();
     });
 
-    it('devrait lever NotFoundException si le restaurant n\'existe pas', async () => {
+    it("devrait lever NotFoundException si le restaurant n'existe pas", async () => {
       mockPrismaService.restaurant.findUnique.mockResolvedValue(null);
 
       await expect(service.remove('999')).rejects.toThrow(NotFoundException);
@@ -374,7 +385,9 @@ const mockCacheManager = {
       };
 
       mockPrismaService.restaurant.findFirst.mockResolvedValue(null);
-      mockPrismaService.restaurant.create.mockResolvedValue(mockCreatedRestaurant);
+      mockPrismaService.restaurant.create.mockResolvedValue(
+        mockCreatedRestaurant,
+      );
 
       const result = await service.createSimple(mockSimpleDto, 1);
 

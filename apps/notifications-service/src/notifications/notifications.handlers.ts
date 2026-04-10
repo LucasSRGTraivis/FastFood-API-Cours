@@ -3,27 +3,36 @@ import { EventPattern, Payload } from '@nestjs/microservices';
 
 @Controller()
 export class NotificationsHandlers {
+  private asRecord(data: unknown): Record<string, unknown> {
+    return typeof data === 'object' && data !== null
+      ? (data as Record<string, unknown>)
+      : {};
+  }
+
   @EventPattern('order.created')
-  handleOrderCreated(@Payload() data: any) {
-    // eslint-disable-next-line no-console
+  handleOrderCreated(@Payload() data: unknown) {
+    const payload = this.asRecord(data);
+
     console.log(
-      `[notifications-service] Email envoyé : Commande #${data.orderId} confirmée pour le client ${data.customerId}`,
+      `[notifications-service] Email envoyé : Commande #${String(payload.orderId ?? '')} confirmée pour le client ${String(payload.customerId ?? '')}`,
     );
   }
 
   @EventPattern('payment.confirmed')
-  handlePaymentConfirmed(@Payload() data: any) {
-    // eslint-disable-next-line no-console
+  handlePaymentConfirmed(@Payload() data: unknown) {
+    const payload = this.asRecord(data);
+
     console.log(
-      `[notifications-service] Email envoyé : Paiement #${data.paymentId ?? data.orderId} reçu`,
+      `[notifications-service] Email envoyé : Paiement #${String(payload.paymentId ?? payload.orderId ?? '')} reçu`,
     );
   }
 
   @EventPattern('order.delivered')
-  handleOrderDelivered(@Payload() data: any) {
-    // eslint-disable-next-line no-console
+  handleOrderDelivered(@Payload() data: unknown) {
+    const payload = this.asRecord(data);
+
     console.log(
-      `[notifications-service] Email envoyé : Commande #${data.orderId} livrée`,
+      `[notifications-service] Email envoyé : Commande #${String(payload.orderId ?? '')} livrée`,
     );
   }
 }

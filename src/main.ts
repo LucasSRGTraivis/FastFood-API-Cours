@@ -17,20 +17,27 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   // Compression gzip
-  app.use(compression({
-    threshold: 1024,
-    level: 6,
-  }));
+  app.use(
+    compression({
+      threshold: 1024,
+      level: 6,
+    }),
+  );
 
-  app.useGlobalPipes(new ValidationPipe({
-    whitelist: true,
-    forbidNonWhitelisted: true,
-    transform: true,
-    transformOptions: { enableImplicitConversion: true },
-  }));
+  app.useGlobalPipes(
+    new ValidationPipe({
+      whitelist: true,
+      forbidNonWhitelisted: true,
+      transform: true,
+      transformOptions: { enableImplicitConversion: true },
+    }),
+  );
 
   app.useGlobalFilters(new GlobalExceptionFilter());
-  app.useGlobalInterceptors(new LoggingInterceptor(), new TransformInterceptor());
+  app.useGlobalInterceptors(
+    new LoggingInterceptor(),
+    new TransformInterceptor(),
+  );
 
   useContainer(app.select(AppModule), { fallbackOnErrors: true });
 
@@ -52,10 +59,16 @@ async function bootstrap() {
     .addBearerAuth()
     .build();
   const doc = SwaggerModule.createDocument(app, config, {
-    include: [AuthModule, RestaurantsModule, MenusModule, MenuItemsModule, OrdersModule],
+    include: [
+      AuthModule,
+      RestaurantsModule,
+      MenusModule,
+      MenuItemsModule,
+      OrdersModule,
+    ],
   });
   SwaggerModule.setup('api-docs', app, doc);
 
   await app.listen(process.env.PORT ?? 3000);
 }
-bootstrap();
+void bootstrap();

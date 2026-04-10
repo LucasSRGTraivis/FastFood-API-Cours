@@ -22,8 +22,8 @@ async function bootstrap() {
   );
 
   await app.listen();
-  // eslint-disable-next-line no-console
+
   console.log('[analytics-service] started on queue "analytics_queue"');
 }
 
-bootstrap();
+void bootstrap();

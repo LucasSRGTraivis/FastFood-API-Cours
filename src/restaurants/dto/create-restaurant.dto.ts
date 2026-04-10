@@ -58,7 +58,9 @@ export class AddressDto {
     description: 'Code pays ISO 3166-1 alpha-2',
     example: 'FR',
   })
-  @IsISO31661Alpha2({ message: 'Le code pays doit être au format ISO 3166-1 alpha-2 (ex: FR, US)' })
+  @IsISO31661Alpha2({
+    message: 'Le code pays doit être au format ISO 3166-1 alpha-2 (ex: FR, US)',
+  })
   country: string;
 }
 

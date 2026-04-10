@@ -14,7 +14,7 @@ describe('JwtAuthGuard', () => {
   });
 
   it('devrait être défini', () => {
-    expect(guard).toBeDefined(); 
+    expect(guard).toBeDefined();
   });
 
   it('devrait étendre AuthGuard de Passport', () => {

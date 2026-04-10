@@ -29,6 +29,7 @@ import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RolesGuard } from '../auth/guards/roles.guard';
 import { Roles } from '../auth/decorators/roles.decorator';
 import { CurrentUser } from '../auth/decorators/current-user.decorator';
+import type { FindAllFilters } from './restaurants.service';
 
 @ApiTags('restaurants')
 @Controller({ path: 'restaurants', version: '1' })
@@ -49,7 +50,10 @@ export class RestaurantsV1Controller {
   @ApiResponse({ status: 400, description: 'Données invalides.' })
   @ApiResponse({ status: 401, description: 'Non authentifié.' })
   @ApiResponse({ status: 403, description: 'Accès refusé (rôle insuffisant).' })
-  @ApiResponse({ status: 409, description: 'Conflit : restaurant existe déjà.' })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflit : restaurant existe déjà.',
+  })
   @ApiResponse({ status: 429, description: 'Limite de requêtes dépassée.' })
   async create(@Body() dto: CreateRestaurantDto, @CurrentUser() user: any) {
     return this.restaurantsService.create(dto, user.id);
@@ -73,14 +77,23 @@ export class RestaurantsV1Controller {
     name: 'limit',
     required: false,
     type: Number,
-    description: 'Nombre d\'éléments par page (défaut : 20, max : 100)',
+    description: "Nombre d'éléments par page (défaut : 20, max : 100)",
     schema: { type: 'integer', minimum: 1, maximum: 100, default: 20 },
     example: 20,
   })
   @ApiQuery({
     name: 'cuisine',
     required: false,
-    enum: ['ITALIEN', 'ASIATIQUE', 'BURGER', 'PIZZA', 'SUSHI', 'INDIEN', 'FRANCAIS', 'FAST_FOOD'],
+    enum: [
+      'ITALIEN',
+      'ASIATIQUE',
+      'BURGER',
+      'PIZZA',
+      'SUSHI',
+      'INDIEN',
+      'FRANCAIS',
+      'FAST_FOOD',
+    ],
     description: 'Filtrer par type de cuisine',
   })
   @ApiQuery({
@@ -103,7 +116,10 @@ export class RestaurantsV1Controller {
     description: 'Sélection de champs (ex: id,name,cuisine,rating)',
     example: 'id,name,cuisine,rating',
   })
-  @ApiResponse({ status: 200, description: 'Liste avec pagination et métadonnées.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Liste avec pagination et métadonnées.',
+  })
   @ApiResponse({ status: 400, description: 'Paramètres de requête invalides.' })
   @ApiResponse({ status: 429, description: 'Limite de requêtes dépassée.' })
   async findAll(
@@ -118,21 +134,28 @@ export class RestaurantsV1Controller {
       limit = 100;
     }
 
-    const filters: any = {};
+    const filters: FindAllFilters = {};
     if (cuisine) filters.cuisine = cuisine;
     if (minRating !== undefined) filters.minRating = Number(minRating);
     if (isOpen !== undefined) filters.isOpen = isOpen === 'true';
 
-    const selectedFields = fields ? fields.split(',').map(f => f.trim()) : undefined;
+    const selectedFields = fields
+      ? fields.split(',').map((f) => f.trim())
+      : undefined;
 
-    return this.restaurantsService.findAll(page, limit, filters, selectedFields);
+    return this.restaurantsService.findAll(
+      page,
+      limit,
+      filters,
+      selectedFields,
+    );
   }
 
   @Get('scroll')
   @ApiOperation({
     summary: 'Liste des restaurants avec pagination cursor (scroll infini)',
     description:
-      "Retourne une page de restaurants basée sur un curseur, adaptée au scroll infini côté mobile.",
+      'Retourne une page de restaurants basée sur un curseur, adaptée au scroll infini côté mobile.',
   })
   @ApiQuery({
     name: 'cursor',
@@ -144,12 +167,12 @@ export class RestaurantsV1Controller {
     name: 'limit',
     required: false,
     type: Number,
-    description: 'Nombre d\'éléments à retourner (défaut : 20, max : 100)',
+    description: "Nombre d'éléments à retourner (défaut : 20, max : 100)",
     schema: { type: 'integer', minimum: 1, maximum: 100, default: 20 },
     example: 20,
   })
-  @ApiResponse({ 
-    status: 200, 
+  @ApiResponse({
+    status: 200,
     description: 'Liste avec curseur pour la page suivante.',
     schema: {
       example: {
@@ -175,7 +198,7 @@ export class RestaurantsV1Controller {
   @ApiOperation({
     summary: "Détail d'un restaurant avec menus et items",
     description:
-      "Retourne le restaurant demandé avec ses relations utiles (menus et items) pour affichage détaillé.",
+      'Retourne le restaurant demandé avec ses relations utiles (menus et items) pour affichage détaillé.',
   })
   @ApiParam({
     name: 'id',
@@ -183,13 +206,18 @@ export class RestaurantsV1Controller {
     schema: { type: 'string', format: 'uuid' },
     example: '11111111-1111-4111-8111-111111111111',
   })
-  @ApiResponse({ status: 200, description: 'Restaurant trouvé avec relations.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Restaurant trouvé avec relations.',
+  })
   @ApiResponse({ status: 404, description: 'Restaurant introuvable.' })
   @ApiResponse({ status: 429, description: 'Limite de requêtes dépassée.' })
   async findOne(@Param('id') id: string) {
     const restaurant = await this.restaurantsService.findOne(id);
 
-    const [street = restaurant.address, rest = ''] = String(restaurant.address ?? '').split(',');
+    const [street = restaurant.address, rest = ''] = String(
+      restaurant.address ?? '',
+    ).split(',');
     const city = rest.trim().split(' ').slice(1).join(' ') || '';
 
     return {
@@ -251,7 +279,10 @@ export class RestaurantsV1Controller {
     example: '11111111-1111-4111-8111-111111111111',
   })
   @ApiResponse({ status: 400, description: "Format d'identifiant invalide." })
-  @ApiResponse({ status: 204, description: 'Restaurant supprimé (soft delete).' })
+  @ApiResponse({
+    status: 204,
+    description: 'Restaurant supprimé (soft delete).',
+  })
   @ApiResponse({ status: 401, description: 'Non authentifié.' })
   @ApiResponse({ status: 403, description: 'Accès refusé (admin uniquement).' })
   @ApiResponse({ status: 404, description: 'Restaurant introuvable.' })

@@ -9,12 +9,7 @@ import {
   HttpCode,
   HttpStatus,
 } from '@nestjs/common';
-import {
-  ApiTags,
-  ApiOperation,
-  ApiParam,
-  ApiResponse,
-} from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 import { MenuItemsService } from './menu-items.service';
 import { CreateMenuItemDto } from './dto/create-menu-item.dto';
 import { UpdateMenuItemDto } from './dto/update-menu-item.dto';
@@ -27,7 +22,7 @@ export class MenuItemsController {
   @Post()
   @ApiOperation({
     summary: 'Créer un item',
-    description: "Crée un item rattaché à un menu existant.",
+    description: 'Crée un item rattaché à un menu existant.',
   })
   @ApiParam({
     name: 'menuId',
@@ -38,7 +33,10 @@ export class MenuItemsController {
   @ApiResponse({ status: 201, description: 'Item créé' })
   @ApiResponse({ status: 400, description: 'Payload invalide.' })
   @ApiResponse({ status: 404, description: 'Menu introuvable.' })
-  @ApiResponse({ status: 409, description: "Conflit métier lors de la création de l'item." })
+  @ApiResponse({
+    status: 409,
+    description: "Conflit métier lors de la création de l'item.",
+  })
   @ApiResponse({ status: 429, description: 'Limite de requêtes dépassée.' })
   async create(
     @Param('menuId') menuId: string,
@@ -50,7 +48,8 @@ export class MenuItemsController {
   @Get()
   @ApiOperation({
     summary: "Liste des items d'un menu",
-    description: 'Retourne tous les items d un menu avec leurs catégories associées.',
+    description:
+      'Retourne tous les items d un menu avec leurs catégories associées.',
   })
   @ApiParam({
     name: 'menuId',
@@ -111,7 +110,10 @@ export class MenuItemsController {
   @ApiResponse({ status: 200, description: 'Item mis à jour' })
   @ApiResponse({ status: 400, description: 'Payload de mise a jour invalide.' })
   @ApiResponse({ status: 404, description: 'Item introuvable' })
-  @ApiResponse({ status: 409, description: "Conflit métier lors de la mise a jour de l'item." })
+  @ApiResponse({
+    status: 409,
+    description: "Conflit métier lors de la mise a jour de l'item.",
+  })
   @ApiResponse({ status: 429, description: 'Limite de requêtes dépassée.' })
   async update(
     @Param('id') id: string,

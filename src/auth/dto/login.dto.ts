@@ -10,7 +10,7 @@ export class LoginDto {
   email: string;
 
   @ApiProperty({
-    description: "Mot de passe associé au compte utilisateur",
+    description: 'Mot de passe associé au compte utilisateur',
     example: 'NexusSecure123!',
   })
   @IsString()
