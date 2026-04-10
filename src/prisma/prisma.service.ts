@@ -1,6 +1,5 @@
 import { Injectable, OnModuleInit, OnModuleDestroy } from '@nestjs/common';
-import { PrismaClient } from '@prisma/client';
-import type { PrismaClientOptions } from '@prisma/client/runtime/library';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { Pool } from 'pg';
 
@@ -18,7 +17,7 @@ export class PrismaService
         'postgresql://nexuseats:nexuseats_dev@localhost:5432/nexuseats',
     });
     const adapter = new PrismaPg(pool);
-    const options: PrismaClientOptions = {
+    const options: Prisma.PrismaClientOptions = {
       adapter,
       log: ['query', 'info', 'warn', 'error'],
     };
